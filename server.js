@@ -2,13 +2,14 @@
 // where your node app starts
 
 // init project
-require('dotenv').config();
-var express = require('express');
+import dot from 'dotenv';
+dot.config();
+import express from 'express';
 var app = express();
-
+import fetch from 'node-fetch';
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
-var cors = require('cors');
+import cors from 'cors';
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
@@ -26,10 +27,12 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api/whoami", (req, res) => {
+app.get("/api/whoami", async (req, res) => {
   console.log(req.client, 'hola')
+  const ip = await fetch('https://api.ipify.org?format=json').then(res => res.json());
+  console.log(ip)
   res.json({
-    ipaddress: '2806:103e:d:cdab:972a:ad7b:8175:4ada',
+    ipaddress: `${ip.ip}`,
     language: req.headers['accept-language'],
     software: req.headers['user-agent'],
 
